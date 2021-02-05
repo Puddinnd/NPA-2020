@@ -20,18 +20,21 @@ class TestRouter(unittest.TestCase):
         self.assertTrue(r1.getHostname() == newHostname)
         self.assertTrue(r1.getBrand() == newBrand)
         self.assertTrue(r1.getModel() == newModel)
+        del r1
 
     def test_02_addInterface(self):
         r1 = Router(newHostname, newBrand, newModel)
         intname = "g0/0"
         self.assertTrue(r1.add_interface(intname))     # add new interface
         self.assertFalse(r1.add_interface(intname))    # interface already exists
+        del r1
 
     def test_03_getInterface(self):
         r1 = Router(newHostname, newBrand, newModel)
         r1.add_interface("g0/0")
         self.assertFalse(r1.get_interface("g0/0") == {})     # found interface
-        self.assertTrue(r1.get_interface("g0/1") == {})      # not found interface  
+        self.assertTrue(r1.get_interface("g0/1") == {})      # not found interface 
+        del r1
 
     def test_04_showInterfaces(self):
         r1 = Router(newHostname, newBrand, newModel)
@@ -40,6 +43,7 @@ class TestRouter(unittest.TestCase):
         self.assertTrue(r1.show_interfaces())           # show all interfaces
         self.assertTrue(r1.show_interfaces("g0/0"))     # show only selected interface
         self.assertFalse(r1.show_interfaces("fake0/0")) # show error if interface not found
+        del r1
 
     def test_05_connectToAnotherRouter(self):
         r1 = Router("R1", newBrand, newModel)
@@ -48,8 +52,9 @@ class TestRouter(unittest.TestCase):
         r1.add_interface("g0/0")
         r2.add_interface("g0/0")
         r3.add_interface("g0/0")
-        r1.connect_to(router=r2, intf="g0/0", withIntf="g0/0") # Connect between R1 g0/0 and R2 g0/0
-        r3.connect_to(router=r1, intf="g0/0", withIntf="g0/0") # Show error when connect to R1 g0/0 with R3 g0/0
+        self.assertTrue(r1.connect_to(des_router=r2, intf="g0/0", withIntf="g0/0")) # Connect between R1 g0/0 and R2 g0/0
+        self.assertFalse(r3.connect_to(des_router=r1, intf="g0/0", withIntf="g0/0")) # Show error when connect to R1 g0/0 with R3 g0/0
+
 
 if __name__ == "__main__":
     unittest.main()
