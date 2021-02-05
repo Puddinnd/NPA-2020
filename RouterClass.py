@@ -4,6 +4,7 @@ class Router:
     __hostname = "-"
     __brand = "-"
     __model = "-"
+    __interfaces = {}
 
     def __init__(self, hostname, brand, model):
         self.__hostname = hostname
@@ -25,3 +26,10 @@ class Router:
     def setModel(self, model):
         self.__model = str(model)
 
+    def add_interface(self, intname):
+        if intname in self.__interfaces:
+            return False
+        else:
+            self.__interfaces[intname] = {"name":"Interface "+intname}
+            return True
+    
