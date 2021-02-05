@@ -25,10 +25,13 @@ class TestRouter(unittest.TestCase):
         self.assertFalse(r1.add_interface(intname))    # interface already exists
 
     def test_03_getInterface(self):
-        intname1 = "g0/0"
-        intname2 = "g0/1"
-        self.assertFalse(r1.get_interface(intname1) == {})     # found interface
-        self.assertTrue(r1.get_interface(intname2) == {})      # not found interface  
+        self.assertFalse(r1.get_interface("g0/0") == {})     # found interface
+        self.assertTrue(r1.get_interface("g0/1") == {})      # not found interface  
+
+    def test_04_showInterfaces(self):
+        self.assertTrue(r1.show_interfaces())
+        self.assertTrue(r1.show_interfaces("g0/0"))
+        self.assertFalse(r1.show_interfaces("fake0/0"))
 
 if __name__ == "__main__":
     unittest.main()
