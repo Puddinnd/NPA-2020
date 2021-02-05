@@ -12,9 +12,11 @@ class TestRouter(unittest.TestCase):
         brand = "temp brand"
         model = "temp model"
         r1 = Router(hostname, brand, model)
+        # set hostname, brand, model after created an objecet
         r1.setHostname(newHostname)
         r1.setBrand(newBrand)
-        r1.setModel(newModel)       
+        r1.setModel(newModel)
+        # get new values of hostname, brand, model
         self.assertTrue(r1.getHostname() == newHostname)
         self.assertTrue(r1.getBrand() == newBrand)
         self.assertTrue(r1.getModel() == newModel)
@@ -35,9 +37,9 @@ class TestRouter(unittest.TestCase):
         r1 = Router(newHostname, newBrand, newModel)
         r1.add_interface("g0/0")
         r1.add_interface("g0/1")
-        self.assertTrue(r1.show_interfaces())
-        self.assertTrue(r1.show_interfaces("g0/0"))
-        self.assertFalse(r1.show_interfaces("fake0/0"))
+        self.assertTrue(r1.show_interfaces())           # show all interfaces
+        self.assertTrue(r1.show_interfaces("g0/0"))     # show only selected interface
+        self.assertFalse(r1.show_interfaces("fake0/0")) # show error if interface not found
 
 if __name__ == "__main__":
     unittest.main()
