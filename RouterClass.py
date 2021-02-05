@@ -26,13 +26,19 @@ class Router:
     def setModel(self, model):
         self.__model = str(model)
 
-    def add_interface(self, intname, is_shutdown=True):
+    def add_interface(self, intname):
         if intname in self.__interfaces:
             return False
         else:
+            name = "Interface " + intname
             self.__interfaces[intname] = {
-                                            "name":"Interface "+intname,
-                                            "is_shutdown":is_shutdown
+                                            "name":name,
+                                            "connect_to":"nope"
                                         }
             return True
     
+    def get_interface(self, intname):
+        if intname in self.__interfaces:
+            return self.__interfaces[intname]
+        else:
+            return {}
