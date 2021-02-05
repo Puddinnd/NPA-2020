@@ -1,15 +1,11 @@
 class Router:
 
-    # Private Attributes
-    __hostname = "-"
-    __brand = "-"
-    __model = "-"
-    __interfaces = {}
-
     def __init__(self, hostname, brand, model):
+        # Private Attributes
         self.__hostname = hostname
         self.__brand = brand
         self.__model = model
+        self.__interfaces = {}
     
     # Hostname
     def getHostname(self):
@@ -72,4 +68,31 @@ class Router:
         if connect_to == "-":
             print("    Conect to: -")
         else:
-            print("    Conect to: something")
+            print("    Conect to: {} interface {}".format(connect_to["hostname"], connect_to["interface"]))
+
+    def connect_to(self, des_router, intf, withIntf):
+        des_intf = des_router.get_interface(intf)
+        src_intf = self.get_interface(withIntf)
+        # Show error if interfaces not found or interface already taken
+        des_intf_status = self.__checkInterfaceStatus(des_router.getHostname(), des_intf, intf)
+        src_intf_status = self.__checkInterfaceStatus(self.getHostname(), src_intf, withIntf)
+        if des_intf_status == False:
+            return False
+        if src_intf_status == False:
+            return False
+        # Connect 2 routers and show Success messege
+        des_intf["connect_to"] = {"hostname": self.getHostname(), "router":self, "interface":withIntf}
+        src_intf["connect_to"] = {"hostname": des_router.getHostname(), "router":des_router, "interface":intf}
+        print("\n{}'s {} is connected to {}'s {}.".format(self.getHostname(), withIntf, des_router.getHostname(), intf))
+        return True         
+    
+    def __checkInterfaceStatus(self, hostname, interface, interface_name):
+        if interface == {}:
+            print("\nNot found interface {} in {}".format(interface_name, hostname))
+            return False
+        elif not interface["connect_to"] == "-":
+            print("\n{} interface {} is already connected to another router..".format(hostname, interface_name))
+            return False
+        return True
+
+            
