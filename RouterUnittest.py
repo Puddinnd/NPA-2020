@@ -41,5 +41,15 @@ class TestRouter(unittest.TestCase):
         self.assertTrue(r1.show_interfaces("g0/0"))     # show only selected interface
         self.assertFalse(r1.show_interfaces("fake0/0")) # show error if interface not found
 
+    def test_05_connectToAnotherRouter(self):
+        r1 = Router("R1", newBrand, newModel)
+        r2 = Router("R2", newBrand, newModel)
+        r3 = Router("R3", newBrand, newModel)
+        r1.add_interface("g0/0")
+        r2.add_interface("g0/0")
+        r3.add_interface("g0/0")
+        r1.connect_to(router=r2, intf="g0/0", withIntf="g0/0") # Connect between R1 g0/0 and R2 g0/0
+        r3.connect_to(router=r1, intf="g0/0", withIntf="g0/0") # Show error when connect to R1 g0/0 with R3 g0/0
+
 if __name__ == "__main__":
     unittest.main()
