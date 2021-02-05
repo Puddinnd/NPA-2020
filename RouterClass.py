@@ -95,4 +95,11 @@ class Router:
             return False
         return True
 
-            
+    def show_cdp_neighbor(self):
+        print("\nShow {}'s CDP neighbor:".format(self.getHostname()))
+        print("    Hostname\tDes_intf\tSrc_intf\t")
+        keys = sorted(self.__interfaces.keys())
+        for intf in keys:
+            if not self.__interfaces[intf]["connect_to"] == "-":
+                tmp = self.__interfaces[intf]["connect_to"]
+                print("  > {}\t\t{}\t\t{}".format(tmp["hostname"], tmp["interface"], intf))
