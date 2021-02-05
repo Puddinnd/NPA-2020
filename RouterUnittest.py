@@ -21,8 +21,9 @@ class TestRouter(unittest.TestCase):
 
     def test_addInterface(self):
         int_name = "g0/0"
-        self.assertTrue(r1.add_interface(int_name))     # add new interface
-        self.assertFalse(r1.add_interface(int_name))    # interface already existed
+        is_shutdown = True
+        self.assertTrue(r1.add_interface(int_name, is_shutdown))     # add new interface
+        self.assertFalse(r1.add_interface(int_name, is_shutdown))    # interface already existed
 
 
 if __name__ == "__main__":
