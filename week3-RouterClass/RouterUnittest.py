@@ -78,6 +78,51 @@ class TestRouter(unittest.TestCase):
         r1.show_cdp_neighbor()
         r2.show_cdp_neighbor()
         r3.show_cdp_neighbor()
+        del r1
+        del r2
+        del r3
 
+    def test_07_find_path_to(self):
+        # Do something look like a traceroute without IP address
+        print("\n---------------------find_path_to---------------------")
+        r1 = Router("R1", newBrand, newModel)
+        r2 = Router("R2", newBrand, newModel)
+        r3 = Router("R3", newBrand, newModel)
+        r4 = Router("R4", newBrand, newModel)
+        r5 = Router("R5", newBrand, newModel)
+        r6 = Router("R6", newBrand, newModel)
+        # add an interface to r1
+        r1.add_interface("g0/0")
+        # add 3 interfaces to r2
+        r2.add_interface("g0/0")
+        r2.add_interface("g0/1")
+        r2.add_interface("g0/2")
+        # add 2 interfaces to r3
+        r3.add_interface("g0/0")
+        r3.add_interface("g0/1")
+        # add 2 interfaces to r4
+        r4.add_interface("g0/0")
+        r4.add_interface("g0/1")
+        # add 2 interfaces to r5
+        r5.add_interface("g0/0")
+        r5.add_interface("g0/1")
+        # add an interface to r6
+        r6.add_interface("g0/0")
+        # connect router
+        r1.connect_to(des_router=r2, intf="g0/0", withIntf="g0/0") # connect : 1-2 3 4 5 6
+        r2.connect_to(des_router=r3, intf="g0/1", withIntf="g0/1") # conectt : 1-2-3 4 5 6
+        r3.connect_to(des_router=r4, intf="g0/0", withIntf="g0/0") # connect : 1-2-3-4 5 6
+        r4.connect_to(des_router=r5, intf="g0/1", withIntf="g0/1") # connect : 1-2-3-4-5 6
+        r5.connect_to(des_router=r2, intf="g0/2", withIntf="g0/0") # connect : 1-2-3-4-5 6
+                                                                   #              \---/
+        self.assertTrue(r1.find_path_to(r5))    # must show 2 paths from r1 to r5 then return True
+        self.assertFalse(r1.find_path_to(r6))   # show warning messege and return False
+        del r1
+        del r2
+        del r3
+        del r4
+        del r5
+        del r6
+        
 if __name__ == "__main__":
     unittest.main()
