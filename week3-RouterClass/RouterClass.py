@@ -103,3 +103,36 @@ class Router:
             if not self.__interfaces[intf]["connect_to"] == "-":
                 tmp = self.__interfaces[intf]["connect_to"]
                 print("  > {}\t\t{}\t\t{}".format(tmp["hostname"], tmp["interface"], intf))
+
+    # Additional methods
+    def find_path_to(self, des_router):
+        paths = self.__dfs_find_path(des_router.getHostname(), mark={}, data={"prev_path":[self.getHostname()],"finding_path":[]}, paths=[], cur_router=self)
+        if paths == []:
+            print("\nNot found any paths from {} to {}. sry...".format(self.getHostname(), des_router.getHostname()))
+            return False
+        else:
+            print("\nFound {} paths from {} to {}:".format(len(paths), self.getHostname(), des_router.getHostname()))
+            for path in paths:
+                print("    "+str(path))
+            return True
+
+    def __dfs_find_path(self, des_name, mark, data, paths, cur_router):
+        # Depth First Search
+        if des_name == cur_router.getHostname():
+            # Found path!!
+            paths.append(data["prev_path"])
+        else:
+            #add neighbor routers to queue
+            for intf in cur_router.__interfaces:
+                if (not cur_router.__interfaces[intf]["connect_to"] == "-") and (not cur_router.__interfaces[intf]["connect_to"]["router"].getHostname() in mark or mark[cur_router.__interfaces[intf]["connect_to"]["router"].getHostname()]==1):
+                    data = {
+                        "router": cur_router.__interfaces[intf]["connect_to"]["router"],
+                        "prev_path": data["prev_path"]+[cur_router.__interfaces[intf]["connect_to"]["router"].getHostname()],
+                        "finding_path":data["finding_path"]
+                        }
+                    mark[cur_router.getHostname()] = 0
+                    self.__dfs_find_path(des_name, mark, data, paths, data["router"])
+                    data["prev_path"] = data["prev_path"][:-1]
+            mark[cur_router.getHostname()] = 1
+        return paths
+                
