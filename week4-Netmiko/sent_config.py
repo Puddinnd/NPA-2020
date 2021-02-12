@@ -13,7 +13,7 @@ def setIPtoInterface(device_params, interface, ip, subnet):
         ]
         ssh.send_config_set(commands)
         ssh.exit_config_mode()
-        ssh.send_command('write mem')
+        ssh.save_config()
         result = ssh.send_command('sh ip int br')
         ssh.disconnect()
         return result
