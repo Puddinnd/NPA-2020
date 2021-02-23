@@ -49,7 +49,8 @@ def verifyDeviceInfo(device):
                     status = False
     return status
 
-def main():
+def configInterfaces():
+    print("Start configuring IP addresses to all devices...")
     devices_config = yaml.load(open(config_path + "devices_interface_info.yml"), Loader=yaml.Loader)
     # pp.pprint(devices_config)
     for device in devices_config:
@@ -60,5 +61,28 @@ def main():
         else:
             delay_print("[-] "+device['name'] + " status: [Fixed]               ", True)
         # break
+    print()
+
+def main():
+    print("___________________________________")
+    print("|                                 |")
+    print("| Select an options to configure: |")
+    print("|   [0]: all                      |")
+    print("|   [1]: IP addresses             |")
+    print("|   [2]: access-lists             |")
+    # print("|                                 |")
+    # print("|  use comma to select multiple   |")
+    # print("|  like: 1,2                      |")
+    print("|_________________________________|")
+    print()
+    option = input("Choose: ").strip()
+
+    if option == 0:
+        configInterfaces()
+    elif option == "1":
+        configInterfaces()
+    else:
+        print("Invalid option.")
+        print()
 
 main()
