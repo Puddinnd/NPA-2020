@@ -7,6 +7,7 @@
       name: "g0/1"
       ip: "10.0.15.178"
       subnet: "255.255.255.0"
+      wildcard: "0.0.0.255"
       desc: "Connect to Cloud1"
 - name: S0
   id: 2
@@ -23,10 +24,12 @@
     - name: "g0/1"
       ip: "172.31.178.17"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R2 (172.31.178.16/28)"
     - name: "g0/2"
       ip: "172.31.178.33"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R3 (172.31.178.32/28)"
 - name: R2
   id: 5
@@ -35,10 +38,12 @@
     - name: "g0/1"
       ip: "172.31.178.18"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R1 (172.31.178.16/28)"
     - name: "g0/2"
       ip: "172.31.178.49"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R3 (172.31.178.48/28)"
 - name: R3
   id: 6
@@ -47,14 +52,17 @@
     - name: "g0/1"
       ip: "172.31.178.34"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R1 (172.31.178.32/28)"
     - name: "g0/2"
       ip: "172.31.178.50"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R2 (172.31.178.48/28)"
     - name: "g0/3"
       ip: "172.31.178.65"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R4 and R5 (172.31.178.64/28)"
 - name: R4
   id: 77"
@@ -63,6 +71,7 @@
     - name: "g0/1"
       ip: "172.31.178.66"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R3 and R5 (172.31.178.64/28)"
 - name: S2
   id: 8
@@ -75,4 +84,5 @@
     - name: "g0/1"
       ip: "172.31.178.67"
       subnet: "255.255.255.240"
+      wildcard: "0.0.0.15"
       desc: "Connect to R3 and R4 (172.31.178.64/28)"
