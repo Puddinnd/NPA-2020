@@ -1,0 +1,11 @@
+---
+  AllowOnlyManagementPlane:
+      type: standard
+      list:
+      - src: "172.31.178.0"
+        wcd: "0.0.0.15"
+        cmd: permit 
+      - src: "10.0.0.0"
+        wcd: "0.255.255.255"
+        cmd: permit 
+

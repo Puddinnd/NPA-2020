@@ -2,28 +2,72 @@
 - name: R0
   id: 1
   management_ip: "172.31.178.1"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: S0
   id: 2
   management_ip: "172.31.178.2"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: S1
   id: 3
   management_ip: "172.31.178.3"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: R1
   id: 4
   management_ip: "172.31.178.4"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: R2
   id: 5
   management_ip: "172.31.178.5"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: R3
   id: 6
   management_ip: "172.31.178.6"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: R4
   id: 7
   management_ip: "172.31.178.7"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: S2
   id: 8
   management_ip: "172.31.178.8"
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in
 - name: R5
   id: 9
   management_ip: "172.31.178.9"
-  
+  acl:
+  - name: AllowOnlyManagementPlane
+    interfaces:
+    - name: vty
+      direction: in 
