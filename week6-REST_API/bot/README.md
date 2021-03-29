@@ -1,2 +1,2 @@
 # week6 - Webex Bot
-Learning: create Bots for responding Webex chat room
+Learning: create bot for responding user input in Webex chat room
