@@ -4,9 +4,15 @@ import json
 import time
 import sys
 import datetime
+import html
+import googleapiclient.discovery
+from youtube_title_parse import get_artist_title    ###https://pypi.org/project/youtube-title-parse/
+from spotipy.oauth2 import SpotifyClientCredentials ###https://github.com/plamere/spotipy
+import spotipy                                      ### ^
 from flask import Flask, request
 from Secret import *
 from pprint import pprint
+
 
 ################################### Register our URL to Webhook ###############################
 def verifyWebhook():
@@ -72,9 +78,9 @@ app = Flask(__name__)
 @app.route("/",methods=['POST']) # all request from webhook will come with POST method
 def webhook():
     try:
-        # Get the json data
+        ### Get the json data
         json = request.json
-        # sending back
+        ### sending back
         room_id = json["data"]["roomId"] # Room: TEST BOT
         # print(room_id, file=sys.stdout)
         if room_id == selected_room_id:
@@ -94,7 +100,7 @@ def bot_sendMessange(data):
         return 
     #### Fetch data from APIs
     if  msg_json['text'].startswith('/'):
-        print(" * Bot has received a command..")
+        print(" * Bot has received a command..(/)")
         location = msg_json['text'].strip()[1:]
         latlng = getLatLong(location)
         if not latlng: return
@@ -103,6 +109,22 @@ def bot_sendMessange(data):
         timestamp = datetime.datetime.fromtimestamp(iss_passtimes['risetime'])
         dt = timestamp.strftime('on %A %d %B %Y at %H:%M:%S')
         response_text = "ISS will pass {} {}".format(location.capitalize(), dt)
+    elif msg_json['text'].startswith('>'):
+        print(" * Bot has received a command..(>)")
+        searchstr = msg_json['text'].strip()[1:]
+        youtube_api_response = searchForVideo(searchstr)
+        # print("GOT:", youtube_api_response['title'] + ":" + youtube_api_response['artist'])
+        # print("link:", youtube_api_response['link']['youtube'])
+        spotify_api_response = searchInSpotify(youtube_api_response['title'] + " " + youtube_api_response['artist'])
+        response_text = "Title: " + youtube_api_response['title'] + " - " + youtube_api_response['artist'] + "\r\n"
+        if youtube_api_response:
+            response_text += "youtube: " + youtube_api_response['link']['youtube'] + "\r\n"
+        else:
+            response_text += "youtube: -\r\n"
+        if spotify_api_response:
+            response_text += "spotify: " + spotify_api_response['link']['spotify']
+        else:
+            response_text += "spotify: -\r\n"
     else:
         return
     #### Send response messange
@@ -118,7 +140,8 @@ def bot_sendMessange(data):
         print(" * Post messange success!")
     else:
         print(" - Can not post messange..")
-    
+
+### Get messange details from webex
 def getMessangeDetails(msgId):
     header = {"Authorization": "Bearer %s" % my_token, "content-type": "application/json"}
     requests.packages.urllib3.disable_warnings()
@@ -130,6 +153,7 @@ def getMessangeDetails(msgId):
     except:
         return []
 
+### /ISS
 def getLatLong(location):
     # print("Location:", location)
     mapquest_url = "http://www.mapquestapi.com/geocoding/v1/address"
@@ -162,6 +186,41 @@ def getISSPassTimes(latlng):
             return
     else:
         return
+
+### >Youtube
+def searchForVideo(searchstr):
+    # print("Search for:", searchstr)
+    try:
+        youtube = googleapiclient.discovery.build(
+            youtube_api_service_name,
+            youtube_api_version,
+            developerKey = youtube_DEVELOPER_KEY
+        )
+        request = youtube.search().list(
+            order="viewCount",
+            q=searchstr,
+            part="id,snippet",
+        )
+        response = request.execute()
+        # pprint(response['items'][0])
+        youtube_link = "https://youtu.be/" + response['items'][0]['id']['videoId']
+        youtube_title = html.unescape(response['items'][0]['snippet']['title'])
+        youtube_title = youtube_title.split("feat.")[0].split("ft.")[0]
+        # print("Youtube title:", youtube_title)
+        artist, title = get_artist_title(youtube_title)
+        return {'link':{"youtube":youtube_link}, 'title':title, 'artist':artist}
+    except:
+        return
+
+def searchInSpotify(searchstr):
+    print("search:", searchstr)
+    results = {}
+    try:
+        sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=spotify_client_id,client_secret=spotify_client_secret))
+        results = sp.search(q=searchstr, limit=1)
+        return {'link':{"spotify":results['tracks']['items'][0]['external_urls']['spotify']}}
+    except:
+        return 
 
 if __name__ == '__main__':
     verifyWebhook()
